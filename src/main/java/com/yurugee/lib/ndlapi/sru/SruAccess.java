@@ -3,6 +3,10 @@ package com.yurugee.lib.ndlapi.sru;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import javax.xml.xpath.XPathExpressionException;
+
+import org.xml.sax.SAXException;
+
 import com.yurugee.lib.ndlapi.exception.ConfigurationException;
 import com.yurugee.lib.ndlapi.sru.request.SruRequest;
 import com.yurugee.lib.ndlapi.sru.response.SruResponse;
@@ -13,7 +17,7 @@ public class SruAccess {
 	private static final String URL = "http://iss.ndl.go.jp/api/sru";
 	
 	
-	public static SruResponse send(SruRequest request) throws UnsupportedOperationException, UnsupportedEncodingException, IOException, ConfigurationException{
+	public static SruResponse send(SruRequest request) throws UnsupportedOperationException, UnsupportedEncodingException, IOException, ConfigurationException, NumberFormatException, XPathExpressionException, SAXException{
 
 		
 		String result = HttpUtil.send(getUrlString(request));

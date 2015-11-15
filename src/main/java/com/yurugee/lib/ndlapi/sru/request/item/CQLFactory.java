@@ -5,14 +5,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.z3950.zing.cql.CQLAndNode;
 import org.z3950.zing.cql.CQLNode;import org.z3950.zing.cql.CQLRelation;
+import org.z3950.zing.cql.CQLSortNode;
 import org.z3950.zing.cql.CQLTermNode;
 import org.z3950.zing.cql.ModifierSet;
 import org.z3950.zing.cql.CQLOrNode;
 
 import com.yurugee.lib.ndlapi.exception.ConfigurationException;
+import com.yurugee.lib.ndlapi.sru.request.item.CQLCondition.MediaType;
+import com.yurugee.lib.ndlapi.sru.request.item.CQLCondition.SortBy;
 
 public class CQLFactory {
 	
@@ -76,9 +80,12 @@ public class CQLFactory {
 		multiConditionItemList.add(ItemType.MEDIA_TYPE);
 	}
 	
-	
-	
 	public static CQLNode createCQLNode(ItemType type,MatchCondition match,ListCondition condition,List<String> values) throws ConfigurationException{
+		
+		if(type == ItemType.MEDIA_TYPE){
+			String msg = "Type:"+type.type+" はcreateMediaTypeNodeを利用します";
+			throw new ConfigurationException(msg);
+		}
 		
 		if(!check(type,condition,match,values)){
 			String msg = "Type:"+type.type+" の指定可能条件を満たしていません";
@@ -86,6 +93,10 @@ public class CQLFactory {
 		}
 		
 		return new CQLTermNode(type.type,new CQLRelation(condition.op),createTerm(values, match));
+	}
+	
+	public static CQLNode createMediaTypeNode(List<MediaType> values) throws ConfigurationException{
+		return createCQLNode(ItemType.MEDIA_TYPE, MatchCondition.NONE, ListCondition.EQUAL, values.stream().map(p->p.no).collect(Collectors.toList()));
 	}
 		
 	public static CQLNode mergeNode(CQLNode node1,CQLNode node2,ConditionOperator op) throws ConfigurationException{
@@ -102,6 +113,16 @@ public class CQLFactory {
 		throw new ConfigurationException(msg);
 		
 	}
+	
+	public static CQLSortNode addSortNode(CQLNode queryNode,List<SortBy> sortOrder){
+		CQLSortNode sort = new CQLSortNode(queryNode);
+		
+		sortOrder.stream().forEach(s ->
+			sort.addSortIndex(new ModifierSet(s.sortby)));
+		
+		return sort;
+	}
+	
 	
 	private static boolean check(ItemType type,ListCondition condition,MatchCondition match,List<String> values){
 		
