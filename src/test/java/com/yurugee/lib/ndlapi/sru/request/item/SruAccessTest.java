@@ -8,6 +8,8 @@ import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.junit.Test;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.z3950.zing.cql.CQLNode;
 
@@ -45,9 +47,42 @@ SruRequest request = new SruRequest();
 
 		SruResponse res = SruAccess.send(request);
 
-		System.out.println(res.getResult());
 		System.out.println(res.getCount());
 
+		NodeList list = res.getElementsForXPath("/searchRetrieveResponse/records");
+
+		printElements(list);
+
+
 	}
+
+	private void printElements(NodeList list){
+
+		for(int i= 0;i<list.getLength();i++){
+			Node node = list.item(i);
+			NodeList record = node.getChildNodes();
+			for(int j= 0;i<record.getLength();j++){
+				Node child = record.item(j);
+
+				NodeList recordData = child.getChildNodes();
+
+				for(int k=1;k<recordData.getLength();k++){
+
+					Node recordData1 = recordData.item(k);
+
+					if("recordData".equals(recordData1.getNodeName())){
+						String srw = recordData1.getTextContent();
+						System.out.println(srw);
+					}
+				}
+
+
+
+			}
+		}
+
+	}
+
+
 
 }
