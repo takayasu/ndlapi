@@ -1,7 +1,5 @@
 package com.yurugee.lib.ndlapi.sru.request.item;
 
-import static org.junit.Assert.*;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +18,15 @@ public class SruRequestTest {
 	@Test
 	public void test() throws ConfigurationException, UnsupportedEncodingException {
 		SruRequest request = new SruRequest();
-		
+
 		List<String> values = new ArrayList<String>();
 		values.add("世界");
 		CQLNode node = CQLFactory.createCQLNode(ItemType.TITLE, MatchCondition.NONE, ListCondition.EQUAL, values);
 
 		request.setCql(node);
-		
+
 		System.out.println(request.getQueryString());
-		
+
 	}
 
 }
