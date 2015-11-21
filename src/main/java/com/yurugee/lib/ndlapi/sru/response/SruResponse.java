@@ -36,7 +36,6 @@ public class SruResponse {
 			xPath = xFactory.newXPath();
 
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
